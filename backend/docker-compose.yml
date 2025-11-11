@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+
+ frontend:
+    build: ./frontend
+    container_name: hired-frontend
+    restart: always
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./frontend:/app
+    networks:
+      - hired-net
+
+  backend:
+    build: ./backend
+    container_name: hired-backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - ./data/uploads:/app/uploads
+    networks:
+      - hired-net
+    depends_on:
+      - python-service
+
+  python-service:
+    build: ./python-service
+    container_name: hired-python-service
+    restart: always
+    environment:
+      -PYTHONUNBUFFERED=1
+    volumes:
+      - ./python-service:/app
+      - ./data/uploads:/app/uploads
+    networks:
+      - hired-net
+
+networks:
+  hired-net:
+    driver: bridge
