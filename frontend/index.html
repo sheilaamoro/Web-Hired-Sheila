@@ -239,6 +239,7 @@
             <th data-field="fecha" data-sortable="true">Fecha / Hora</th>
             <th data-field="titulo" data-sortable="true">Título</th>
             <th data-field="metrica" data-sortable="true" data-align="center">Coches detectados</th>
+            <th data-field="metrica_persona" data-sortable="true" data-align="center">Personas detectadas</th>
             <th data-field="duracion" data-sortable="true" data-align="center">Duración</th>
             </tr>
         </thead>
@@ -339,7 +340,7 @@
     <!-- Script para cambiar el estado de Desconectado a Conectado o viceversa-->
    <script src="connection-status.js"></script> 
 
-    <script>
+    <!-- <script>
     const socket = io();
 
     // Elementos: video placeholder (si existe) y contenedor donde añadiremos canvas
@@ -421,7 +422,7 @@
     showPlaceholder();
 
 
-    const WATCHDOG_TIMEOUT = 6000; // ms — ajusta según frecuencia de frames
+    const WATCHDOG_TIMEOUT = 60000; // ms — ajusta según frecuencia de frames
     let _streamWatchdog = null;
 
     function resetStreamWatchdog() {
@@ -523,6 +524,171 @@
             });
         });
     }
+    </script> -->
+
+
+    <script>
+    const socket = io();
+
+    // Elementos
+    const videoEl = document.getElementById('video');
+    const container = document.querySelector('.hero-left.video-card') || (videoEl && videoEl.parentElement) || document.body;
+
+    // Canvas para frames tipo imagen
+    let canvas = document.getElementById('videoCanvas');
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.id = 'videoCanvas';
+        canvas.style.maxWidth = '100%';
+        canvas.style.height = 'auto';
+        canvas.style.background = '#000';
+        canvas.style.display = 'none';
+        container.appendChild(canvas);
+    }
+    const ctx = canvas.getContext('2d');
+
+    // Placeholder
+    const placeholderVideo = (videoEl && (videoEl.dataset.placeholderVideo || videoEl.getAttribute('data-placeholder-video'))) || './fotos/placeholder-video.mp4';
+
+    // Funciones
+    function resizeCanvas(w, h) {
+        canvas.width = w;
+        canvas.height = h;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+    }
+
+    function showOverlay() {
+        const overlay = document.getElementById('videoOverlay');
+        if (!overlay) return;
+        overlay.classList.add('active');
+    }
+
+    function hideOverlay() {
+        const overlay = document.getElementById('videoOverlay');
+        if (!overlay) return;
+        overlay.classList.remove('active');
+    }
+
+    function showPlaceholder() {
+        canvas.style.display = 'none';
+        if (videoEl) {
+            try {
+                videoEl.style.display = '';
+                videoEl.loop = true;
+                if (!videoEl.src || videoEl.src.indexOf(placeholderVideo) === -1) {
+                    videoEl.src = placeholderVideo;
+                    videoEl.load();
+                }
+                videoEl.play().catch(()=>{});
+            } catch(e){}
+        }
+        showOverlay();
+        if (typeof ConnectionStatus !== 'undefined') ConnectionStatus.setStatus(false);
+    }
+
+    // Watchdog solo para frames tipo imagen
+    let _imageWatchdog = null;
+    const IMAGE_WATCHDOG_TIMEOUT = 6000; // ms
+
+    function resetImageWatchdog() {
+        if (_imageWatchdog) clearTimeout(_imageWatchdog);
+        _imageWatchdog = setTimeout(() => {
+            console.warn('Watchdog: no se han recibido frames de imagen — mostrando placeholder');
+            showPlaceholder();
+        }, IMAGE_WATCHDOG_TIMEOUT);
+    }
+
+    // Socket
+    socket.on('frame', data => {
+        if (!data || !data.frame) return;
+
+        const frame = data.frame;
+
+        // Frame tipo imagen (data:image o Blob de imagen)
+        if ((typeof frame === 'string' && frame.startsWith('data:image')) ||
+            (frame instanceof Blob && frame.type.startsWith('image/'))) {
+
+            resetImageWatchdog(); // solo reiniciamos watchdog si es imagen
+
+            hideOverlay();
+            canvas.style.display = '';
+            if (videoEl) try { videoEl.pause(); videoEl.style.display = 'none'; } catch(e){}
+
+            const img = new Image();
+            img.onload = () => {
+                resizeCanvas(img.naturalWidth || img.width || 640, img.naturalHeight || img.height || 360);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                URL.revokeObjectURL(frame instanceof Blob ? URL.createObjectURL(frame) : '');
+            };
+            img.onerror = () => { showPlaceholder(); };
+
+            img.src = frame instanceof Blob ? URL.createObjectURL(frame) : frame;
+
+        } 
+        // Vídeo en directo (Blob de vídeo o URL)
+        else if ((frame instanceof Blob && frame.type.startsWith('video/')) ||
+                (typeof frame === 'string' && (frame.startsWith('data:video') || frame.startsWith('blob:') || frame.startsWith('http') || frame.endsWith('.mp4') || frame.endsWith('.webm')))) {
+
+            // Desactivamos watchdog mientras reproduzca vídeo
+            if (_imageWatchdog) { clearTimeout(_imageWatchdog); _imageWatchdog = null; }
+
+            canvas.style.display = 'none';
+            if (videoEl) {
+                videoEl.style.display = '';
+                videoEl.loop = false;
+                const url = frame instanceof Blob ? URL.createObjectURL(frame) : frame;
+                if (videoEl.src !== url) { videoEl.src = url; videoEl.load(); }
+                videoEl.play().catch(()=>{});
+            }
+        } 
+        else {
+            showPlaceholder();
+        }
+
+        // Actualizar métricas si vienen
+        if (data.metric_car_count !== undefined && data.metric_car_count !== null) {
+            const el = document.getElementById('car-count-value');
+            if (el) el.textContent = data.metric_car_count;
+        }
+
+        if (data.metric_person_count !== undefined && data.metric_person_count !== null) {
+            const el = document.getElementById('person-count-value');
+            if (el) el.textContent = data.metric_person_count;
+        }
+        if (typeof ConnectionStatus !== 'undefined') ConnectionStatus.onFrame();
+    });
+
+    socket.on('disconnect', () => {
+        console.warn('Socket desconectado — mostrando placeholder');
+        showPlaceholder();
+        if (_imageWatchdog) clearTimeout(_imageWatchdog);
+    });
+
+    socket.on('connect', () => resetImageWatchdog());
+
+    // Inicializar placeholder al inicio
+    showPlaceholder();
+
+
+
+    socket.on("connect", () => {
+    // Cambiar texto
+    document.getElementById("status-text").textContent = "Conectado";
+
+    // Cambiar estado visual del punto
+    const dot = document.getElementById("status-dot");
+    dot.classList.remove("disconnected");
+    dot.classList.add("connected");
+    });
+
+    socket.on("disconnect", () => {
+        document.getElementById("status-text").textContent = "Desconectado";
+
+        const dot = document.getElementById("status-dot");
+        dot.classList.remove("connected");
+        dot.classList.add("disconnected");
+    });
     </script>
 
     <!--Script para el botón de "volver arriba"-->
@@ -617,6 +783,7 @@
             fecha: fmtDateShort(v.fecha_hora),
             titulo: `<a href="video_grande.html?id=${encodeURIComponent(v.id_video)}">Grabación ${v.id_video}</a>`,
             metrica: v.metrica ?? 0,
+            metrica_persona: v.metrica_persona ?? 0,
             duracion: formatDuration(v.duracion),
             estado: v.procesado ? '<span class="status-procesado">Procesado</span>' : '<span class="status-pendiente">Pendiente</span>'
         }));

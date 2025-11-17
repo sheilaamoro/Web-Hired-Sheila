@@ -26,7 +26,16 @@ module.exports.create = [
     .escape()
     .not()
     .isEmpty()
-    .withMessage('La métrica del video no puede estar vacía')
+    .withMessage('La métrica de coches del video no puede estar vacía')
+    .bail()
+    .isInt({ min: 0 }).withMessage('La métrica debe ser un número entero positivo')
+    .bail(),
+  body('metrica_personas')
+  .trim()
+    .escape()
+    .not()
+    .isEmpty()
+    .withMessage('La métrica de personas del video no puede estar vacía')
     .bail()
     .isInt({ min: 0 }).withMessage('La métrica debe ser un número entero positivo')
     .bail(),

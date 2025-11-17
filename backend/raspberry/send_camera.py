@@ -12,7 +12,7 @@ import requests
 
 url = "http://localhost:3000/video" # Dirección url del servidor, a donde le tiene que enviar los frames de vídeo
 
-cap = cv2.VideoCapture("http://192.168.1.104:4747/video")  
+cap = cv2.VideoCapture("http://192.168.1.100:4747/video")  
 session  = requests.Session()
 
 while True:

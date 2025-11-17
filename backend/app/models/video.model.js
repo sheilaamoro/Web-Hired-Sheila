@@ -28,6 +28,10 @@ module.exports = (sequelize, Sequelize) => {
     procesado: {
       type: Sequelize.TINYINT,
       allowNull: true
+    },
+    metrica_personas: {
+      type: Sequelize.INTEGER,
+      allowNull: true
     }
   }, {
     tableName: "videos", // ← asegura que Sequelize use exactamente este nombre

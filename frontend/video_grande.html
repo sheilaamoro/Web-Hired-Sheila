@@ -131,7 +131,7 @@
 
             <div class="card border-success rounded-3 text-center p-1 flex-fill shadow-sm"  style="background: linear-gradient(to bottom, #d4edda 40%, #ffffff 40%);">
                 <i class="fa-solid fa-person fa-lg text-success mb-2" style="padding:4px;"></i>
-                <div class="fw-bold fs-6 text-dark">0</div>
+                <div id ="videoMetricaPersona" class="fw-bold fs-6 text-dark">0</div>
                 <div class="text-muted small">Personas</div>
             </div>
 
@@ -300,9 +300,10 @@
             const videoTitle = document.getElementById('videoTitle');
             const videoCreatedAt = document.getElementById('videoCreatedAt');
             const videoMetrica = document.getElementById('videoMetrica');
+            const videoMetricaPersona = document.getElementById('videoMetricaPersona');
             const videoDuration2 = document.getElementById('videoDuration2');
 
-            fetch(url + '/video/' + videoId)
+            fetch(url + ':3000/video/' + videoId)
                 .then(res => res.json())
                 .then(json => {
                     //console.log(json);
@@ -334,6 +335,7 @@
                     
                     videoCreatedAt.innerHTML = fechaFormateada;
                     videoMetrica.innerHTML = (json.metrica ?? 0);
+                    videoMetricaPersona.innerHTML = (json.metrica_persona ?? 0);
                 })
                 .catch(error => console.error(error));
         });
@@ -374,6 +376,7 @@
             fecha: fmtDateShort(v.fecha_hora),
             titulo: `<a href="video_grande.html?id=${encodeURIComponent(v.id_video)}">Grabación ${v.id_video}</a>`,
             metrica: v.metrica ?? 0,
+            metrica_persona: v.metrica_persona ?? 0,
             duracion: formatDuration(v.duracion),
             estado: v.procesado ? '<span class="status-procesado">Procesado</span>' : '<span class="status-pendiente">Pendiente</span>'
         }));

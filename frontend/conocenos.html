@@ -218,16 +218,52 @@
     
     Mejorar para que la condición sea que se esté recibiendo por el puerto-->
 
-    <script src="connection-status.js"></script>
     <script>
-        // Inicializar el estado de conexión
         document.addEventListener('DOMContentLoaded', () => {
-            ConnectionStatus.init();
-        });
+    // Crear el socket con reconexión automática
+    const socket = io(serverSettings.url, {
+        reconnection: true,       // habilita reconexión
+        reconnectionAttempts: Infinity, // intenta reconectar indefinidamente
+        reconnectionDelay: 1000,       // primer intento tras 1s
+        reconnectionDelayMax: 5000     // máximo 5s entre intentos
+    });
+
+    // Escuchar cambios de conexión
+    socket.on('connect', () => {
+        console.log('Conectado al servidor');
+        actualizarEstado(true); // función que actualiza la UI
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Desconectado del servidor');
+        actualizarEstado(false); // función que actualiza la UI
+    });
+
+    // Ejemplo: recibir datos del video
+    socket.on('videoData', (data) => {
+        renderizarVideo(data);
+    });
+
+    function actualizarEstado(conectado) {
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+        if (conectado) {
+            statusDot.classList.remove('disconnected');
+            statusDot.classList.add('connected');
+            statusText.textContent = 'Conectado';
+        } else {
+            statusDot.classList.remove('connected');
+            statusDot.classList.add('disconnected');
+            statusText.textContent = 'Desconectado';
+        }
+    }
+
+    function renderizarVideo(data) {
+        // lógica para renderizar video en directo
+    }
+});
+
     </script>
-    
-
-
 
 </body>
 
