@@ -239,7 +239,7 @@
             <th data-field="fecha" data-sortable="true">Fecha / Hora</th>
             <th data-field="titulo" data-sortable="true">Título</th>
             <th data-field="metrica" data-sortable="true" data-align="center">Coches detectados</th>
-            <th data-field="metrica_persona" data-sortable="true" data-align="center">Personas detectadas</th>
+            <th data-field="metrica_personas" data-sortable="true" data-align="center">Personas detectadas</th>
             <th data-field="duracion" data-sortable="true" data-align="center">Duración</th>
             </tr>
         </thead>
@@ -783,7 +783,7 @@
             fecha: fmtDateShort(v.fecha_hora),
             titulo: `<a href="video_grande.html?id=${encodeURIComponent(v.id_video)}">Grabación ${v.id_video}</a>`,
             metrica: v.metrica ?? 0,
-            metrica_persona: v.metrica_persona ?? 0,
+            metrica_personas: v.metrica_personas ?? 0,
             duracion: formatDuration(v.duracion),
             estado: v.procesado ? '<span class="status-procesado">Procesado</span>' : '<span class="status-pendiente">Pendiente</span>'
         }));
