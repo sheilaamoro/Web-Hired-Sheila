@@ -583,6 +583,12 @@
                 videoEl.play().catch(()=>{});
             } catch(e){}
         }
+
+        ['car-count-value','person-count-value','bicycle-count-value'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '0';
+        });
+        
         showOverlay();
         if (typeof ConnectionStatus !== 'undefined') ConnectionStatus.setStatus(false);
     }
