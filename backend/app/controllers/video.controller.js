@@ -24,6 +24,7 @@ module.exports.get = async (req, res,next) => {
 // Variables para la grabación de frames
 let lastMetricCarCount = 0;
 let lastMetricPersonCount = 0;
+let lastMetricBiciCount = 0;
 let frameCount = 0;
 let frameFiles = [];
 let staleTimer = null;
@@ -36,7 +37,7 @@ ffmpeg.setFfprobePath(ffprobePath);
 
 
 // Manejar un frame recibido
-module.exports.handleFrame = (frameData, metric_car_count, metric_person_count) => {
+module.exports.handleFrame = (frameData, metric_car_count, metric_person_count, metric_bici_count) => {
     // Directorio de uploads
     const uploadsDir = path.join(__dirname, '../../uploads');
     // Crea el directorio si no existe
@@ -54,6 +55,7 @@ module.exports.handleFrame = (frameData, metric_car_count, metric_person_count) 
     // Actualiza el conteo
     lastMetricCarCount = metric_car_count;
     lastMetricPersonCount = metric_person_count;
+    lastMetricBiciCount = metric_bici_count;
 
     if (staleTimer) clearTimeout(staleTimer);
     // Si no llegan nuevos frames en STALE_MS tiempo guarda el vídeo
@@ -87,8 +89,9 @@ module.exports.framesToVideo = async () => {
     const video = await Video.create({
         nombre: fileName,
         fecha_hora: new Date(),
-        metrica: lastMetricCarCount,
+        metrica_coches: lastMetricCarCount,
         metrica_personas: lastMetricPersonCount,
+        metrica_bici: lastMetricBiciCount,
         duracion: 0,
         ruta_archivo: relativePath,
         procesado: false

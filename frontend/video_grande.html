@@ -302,6 +302,7 @@
             const videoCreatedAt = document.getElementById('videoCreatedAt');
             const videoMetrica = document.getElementById('videoMetrica');
             const videoMetricaPersona = document.getElementById('videoMetricaPersona');
+            const videoMetricaBici = document.getElementById('videoMetricaBici');
             const videoDuration2 = document.getElementById('videoDuration2');
 
             fetch(url + ':3000/video/' + videoId)
@@ -337,6 +338,7 @@
                     videoCreatedAt.innerHTML = fechaFormateada;
                     videoMetrica.innerHTML = (json.metrica ?? 0);
                     videoMetricaPersona.innerHTML = (json.metrica_personas ?? 0);
+                    videoMetricaBici.innerHTML = (json.metrica_bici ?? 0);
                 })
                 .catch(error => console.error(error));
         });
@@ -378,6 +380,7 @@
             titulo: `<a href="video_grande.html?id=${encodeURIComponent(v.id_video)}">Grabación ${v.id_video}</a>`,
             metrica: v.metrica ?? 0,
             metrica_personas: v.metrica_personas ?? 0,
+            metrica_bici: v.metrica_bici ?? 0,
             duracion: formatDuration(v.duracion),
             estado: v.procesado ? '<span class="status-procesado">Procesado</span>' : '<span class="status-pendiente">Pendiente</span>'
         }));

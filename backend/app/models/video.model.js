@@ -13,7 +13,15 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
       allowNull: true
     },
-    metrica: {
+    metrica_coches: {
+      type: Sequelize.INTEGER,
+      allowNull: true
+    },
+     metrica_personas: {
+      type: Sequelize.INTEGER,
+      allowNull: true
+    },
+     metrica_bici: {
       type: Sequelize.INTEGER,
       allowNull: true
     },
@@ -28,11 +36,8 @@ module.exports = (sequelize, Sequelize) => {
     procesado: {
       type: Sequelize.TINYINT,
       allowNull: true
-    },
-    metrica_personas: {
-      type: Sequelize.INTEGER,
-      allowNull: true
     }
+   
   }, {
     tableName: "videos", // ← asegura que Sequelize use exactamente este nombre
     timestamps: false    // ← si no tienes createdAt / updatedAt en la tabla

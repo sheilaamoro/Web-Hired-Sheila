@@ -240,6 +240,7 @@
             <th data-field="titulo" data-sortable="true">Título</th>
             <th data-field="metrica" data-sortable="true" data-align="center">Coches detectados</th>
             <th data-field="metrica_personas" data-sortable="true" data-align="center">Personas detectadas</th>
+            <th data-field="metrica_bici" data-sortable="true" data-align="center">Bicicletas detectadas</th>
             <th data-field="duracion" data-sortable="true" data-align="center">Duración</th>
             </tr>
         </thead>
@@ -662,6 +663,11 @@
             const el = document.getElementById('person-count-value');
             if (el) el.textContent = data.metric_person_count;
         }
+         if (data.metric_bici_count !== undefined && data.metric_bici_count !== null) {
+            const el = document.getElementById('bicycle-count-value');
+            if (el) el.textContent = data.metric_bici_count;
+        }
+        
         if (typeof ConnectionStatus !== 'undefined') ConnectionStatus.onFrame();
     });
 
@@ -675,9 +681,7 @@
 
     // Inicializar placeholder al inicio
     showPlaceholder();
-
-
-
+    
     socket.on("connect", () => {
     // Cambiar texto
     document.getElementById("status-text").textContent = "Conectado";
@@ -790,6 +794,7 @@
             titulo: `<a href="video_grande.html?id=${encodeURIComponent(v.id_video)}">Grabación ${v.id_video}</a>`,
             metrica: v.metrica ?? 0,
             metrica_personas: v.metrica_personas ?? 0,
+            metrica_bici: v.metrica_bici ?? 0, 
             duracion: formatDuration(v.duracion),
             estado: v.procesado ? '<span class="status-procesado">Procesado</span>' : '<span class="status-pendiente">Pendiente</span>'
         }));

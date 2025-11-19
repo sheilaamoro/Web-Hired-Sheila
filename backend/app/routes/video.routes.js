@@ -19,13 +19,13 @@ router.get('/:id', videoController.get);      // Obtener video por ID
 
 router.post('/', async (req, res) => {
     const { frame, metric_car_count, metric_person_count } = req.body;
-    console.log('Recibido:', { frame: !!frame, metric_car_count, metric_person_count }); // Muestra si llega el dato
+    console.log('Recibido:', { frame: !!frame, metric_car_count, metric_person_count, metric_bici_count }); // Muestra si llega el dato
     if (!frame) return res.status(400).json({ message: 'No frame provided' });
 
     // Emitir con el nombre de evento que el frontend ya espera: "frame"
     if (io) {
         io.emit('frame', { frame, metric_car_count, metric_person_count });
-        videoController.handleFrame(frame, metric_car_count, metric_person_count); //Llama al controlador para guardar frame
+        videoController.handleFrame(frame, metric_car_count, metric_person_count, metric_bici_count); //Llama al controlador para guardar frame
         return res.sendStatus(200);
     } else {
         // Si no hay socket conectado al servidor todavía, devolver 503

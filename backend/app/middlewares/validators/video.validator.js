@@ -21,14 +21,14 @@ module.exports.create = [
           throw new Error('Oh no, copiaste el nombre de otro video!');
       }
   }),
-  body('metrica')
+  body('metrica_coches')
     .trim()
     .escape()
     .not()
     .isEmpty()
     .withMessage('La métrica de coches del video no puede estar vacía')
     .bail()
-    .isInt({ min: 0 }).withMessage('La métrica debe ser un número entero positivo')
+    .isInt({ min: 0 }).withMessage('La métrica de coches debe ser un número entero positivo')
     .bail(),
   body('metrica_personas')
   .trim()
@@ -37,7 +37,16 @@ module.exports.create = [
     .isEmpty()
     .withMessage('La métrica de personas del video no puede estar vacía')
     .bail()
-    .isInt({ min: 0 }).withMessage('La métrica debe ser un número entero positivo')
+    .isInt({ min: 0 }).withMessage('La métrica de personas debe ser un número entero positivo')
+    .bail(),
+  body('metrica_bici')
+  .trim()
+    .escape()
+    .not()
+    .isEmpty()
+    .withMessage('La métrica de personas del video no puede estar vacía')
+    .bail()
+    .isInt({ min: 0 }).withMessage('La métrica de bici debe ser un número entero positivo')
     .bail(),
   body('videoFile')
     .custom((value, { req }) => {
