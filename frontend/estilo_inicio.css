@@ -330,43 +330,53 @@ html {
     word-wrap: break-word;
 }
 
-.hero-bottom {
-  background: #fff;
-  border-radius: 15px;
-  padding: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  flex: 1 1 auto; /* ocupa todo el espacio restante */
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-}
-
-.hero-bottom p {
-  font-weight: 500;
-  color: #333;
-}
-
-.hero-bottom .chart-container {
-   width: 100%;
-   height: 100%;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-}
 
 #liveChart {
     width: 100% !important;
     height: 100% !important;
-    min-height: 260px; /* aumenta si quieres más altura */
+    min-height: 260px;
     display: block;
 }
+
+
+/* Carrusel entre chart y mapa */
+
+.hero-carousel-card{
+  background: #fff;
+  border-radius: 15px;
+  padding: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  flex: 0 0 auto;
+}
+#heroCarousel .carousel-indicators {
+    bottom: -30px; 
+}
+
+#heroCarousel .carousel-indicators button {
+    background-color: #00b383; 
+}
+#heroCarousel .carousel-indicators .active {
+    background-color: #009970;  
+}
+#map, #map * {
+    z-index: 1 !important;
+}
+
+/* Fin del carrusel entre chart y mapa */
 
 /* Ajustes móviles para no ocupar demasiado espacio en pantallas pequeñas */
 @media (max-width: 768px) {
   #liveChart { min-height: 180px; }
-  .hero-bottom { padding: 10px; }
+  .hero-carousel-card { padding: 10px; }
+    .carousel-slide-content {
+    flex-direction: column; /* apila chart y mapa */
+  }
+
+  .chart-container,
+  .map-container {
+    height: auto;          /* altura inicial flexible */
+    min-height: 260px;     /* evita que se haga demasiado pequeño */
+  }
 }
 
 /* Responsive */
@@ -400,7 +410,6 @@ html {
 .video-placeholder {
   padding: 24px 16px;
 }
-
 
 /* Fin de container2 que contiene al vídeo en directo y métricas */
 

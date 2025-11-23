@@ -2,7 +2,6 @@ const Video = require('../models/db').Video;
 const path = require('path');
 const VideoConfig = require('../config/video.config');
 const fs = require('fs');
-const encoding = require('../media/encoding.js');
 
 // Obtener todos los vídeos
 module.exports.getAll = async (req, res, next) => {
@@ -168,50 +167,3 @@ async function getVideoDuration(filePath) {
 }
 
 
-
-
-/* Subir video manualmente
-module.exports.create = async (req, res) => {
-    try {
-        const { nombre, fecha_hora, metrica, duracion } = req.body;
-
-        const video = await Video.create({
-            nombre,
-            fecha_hora: fecha_hora || new Date(),
-            metrica,
-            duracion,
-            ruta: '',
-            procesado: false
-        });
-
-        if (req.files && req.files.videoFile) {
-            const videoFile = req.files.videoFile;
-            const extension = path.extname(videoFile.name);
-            const videoFileName = VideoConfig.NAME_PREFIX + video.id_video;
-            const uploadPath = VideoConfig.UPLOADS + videoFileName + extension;
-
-            // Guardar archivo en uploads
-            videoFile.mv(uploadPath);
-
-            // Crear carpeta final
-            const outputDir = VideoConfig.PUBLIC + 'video-' + video.id_video;
-            if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
-
-            const outputPath = path.join(outputDir, videoFileName + VideoConfig.EXTENSION);
-
-            await encoding.encodeMp4(uploadPath, outputPath);
-
-            // Actualizar ruta y marcar como procesado
-            video.ruta = outputPath;
-            video.procesado = true;
-            await video.save();
-        }
-
-        res.status(201).json(video);
-    } catch (error) {
-        console.error("Error al crear el video:", error);
-        res.status(500).json({ message: "Error al crear el video" });
-    }
-};
-
-*/

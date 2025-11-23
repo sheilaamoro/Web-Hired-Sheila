@@ -54,11 +54,6 @@
                     </ul>
                 </div>
             </div>
-    
-            <span id="connection-status" class="connection-status" role="status" aria-live="polite">
-                <span id="status-dot" class="status-dot disconnected" aria-hidden="true"></span>
-                <span id="status-text" class="status-text">Desconectado</span>
-            </span>
             
             <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <i class="fa-solid fa-bars" style="color: black;"></i>
@@ -157,11 +152,6 @@
     </div>
 </div>
 
-    
-
-   
-
-
 <div class="container_videos text-center" id="videos">
   <h3 class="section-subtitle">TODO LO QUE NECESITAS, <span class="hero-line-tech">TODO EN UN SOLO LUGAR</span></h3>
   <p>Revive las emisiones accediendo a <em>todas</em> las grabaciones y explora sus métricas asociadas.</p>
@@ -171,8 +161,9 @@
         <tr>
           <th data-field="fecha" data-sortable="true">Fecha / Hora</th>
           <th data-field="titulo" data-sortable="true">Título</th>
-          <th data-field="metrica" data-sortable="true" data-align="center">Coches detectados</th>
+          <th data-field="metrica_coches" data-sortable="true" data-align="center">Coches detectados</th>
           <th data-field="metrica_personas" data-sortable="true" data-align="center">Personas detectadas</th>
+          <th data-field="metrica_bici" data-sortable="true" data-align="center">Bicicletas detectadas</th>
           <th data-field="duracion" data-sortable="true" data-align="center">Duración</th>
         </tr>
       </thead>
@@ -336,7 +327,7 @@
                     });
                     
                     videoCreatedAt.innerHTML = fechaFormateada;
-                    videoMetrica.innerHTML = (json.metrica ?? 0);
+                    videoMetrica.innerHTML = (json.metrica_coches ?? 0);
                     videoMetricaPersona.innerHTML = (json.metrica_personas ?? 0);
                     videoMetricaBici.innerHTML = (json.metrica_bici ?? 0);
                 })
@@ -345,7 +336,6 @@
     </script>
 
 
-    <!--<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>-->
     
     <!--Script para la tabla de vídeos guardados-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -378,7 +368,7 @@
             id_video: v.id_video,
             fecha: fmtDateShort(v.fecha_hora),
             titulo: `<a href="video_grande.html?id=${encodeURIComponent(v.id_video)}">Grabación ${v.id_video}</a>`,
-            metrica: v.metrica ?? 0,
+            metrica_coches: v.metrica_coches ?? 0,
             metrica_personas: v.metrica_personas ?? 0,
             metrica_bici: v.metrica_bici ?? 0,
             duracion: formatDuration(v.duracion),

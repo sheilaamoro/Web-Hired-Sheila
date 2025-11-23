@@ -23,6 +23,16 @@
     <script src="https://kit.fontawesome.com/9de74ee228.js" crossorigin="anonymous"></script> 
     <!--Configuracion de la URL-->
     <script src="URL_config.js"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/> 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script> 
+
+     
 </head>
 
 <body>
@@ -50,14 +60,6 @@
                     </ul>
                 </div>
             </div>
-
-        
-            
-            <span id="connection-status" class="connection-status" role="status" aria-live="polite">
-                <span id="status-dot" class="status-dot disconnected" aria-hidden="true"></span>
-                <span id="status-text" class="status-text">Desconectado</span>
-            </span>
-
 
             <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <i class="fa-solid fa-bars" style="color: black;"></i>
@@ -121,12 +123,38 @@
                     </div>
                 </div>
 
-                <div class="hero-bottom">
+                <!-- <div class="hero-bottom">
                     <div class="chart-container">
                         <canvas id="liveChart" aria-label="Gráfica en directo de métricas" role="img"></canvas>
                     </div>
                 </div>
 
+                <div class="hero-bottom">
+                    <div class="map-container">
+                        
+                    </div>
+                </div> -->
+                
+                <div class="hero-carousel-card ">
+                    <div id="heroCarousel" class="carousel slide" data-bs-ride="false">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <!--  CHART -->
+                            <div class="carousel-item active">
+                                <div class="chart-container">
+                                    <canvas id="liveChart"></canvas>
+                                </div>
+                            </div>
+                            <!--  MAPA -->
+                            <div class="carousel-item">
+                                <div class="map-container" id="map" style="width: 100%; height: 260px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -238,7 +266,7 @@
             <tr>
             <th data-field="fecha" data-sortable="true">Fecha / Hora</th>
             <th data-field="titulo" data-sortable="true">Título</th>
-            <th data-field="metrica" data-sortable="true" data-align="center">Coches detectados</th>
+            <th data-field="metrica_coches" data-sortable="true" data-align="center">Coches detectados</th>
             <th data-field="metrica_personas" data-sortable="true" data-align="center">Personas detectadas</th>
             <th data-field="metrica_bici" data-sortable="true" data-align="center">Bicicletas detectadas</th>
             <th data-field="duracion" data-sortable="true" data-align="center">Duración</th>
@@ -292,7 +320,7 @@
                         </li>
                         <li>
                             <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
-                            <p><a href="mailto:UO288695@uniovi.es">trackit@gmail.com</a></p>
+                            <p><a href="mailto:UO288025@uniovi.es">trackit@gmail.com</a></p>
                         </li>
                     </ul>
                 </div>
@@ -337,196 +365,6 @@
 
     <!--Socket.io JS-->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-
-    <!-- Script para cambiar el estado de Desconectado a Conectado o viceversa-->
-   <script src="connection-status.js"></script> 
-
-    <!-- <script>
-    const socket = io();
-
-    // Elementos: video placeholder (si existe) y contenedor donde añadiremos canvas
-    const videoEl = document.getElementById('video'); // puede ser null si no lo tienes en esta versión
-    const container = document.querySelector('.hero-left.video-card') || (videoEl && videoEl.parentElement) || document.body;
-
-    // Crear canvas para dibujar frames tipo data:image
-    let canvas = document.getElementById('videoCanvas');
-    if (!canvas) {
-        canvas = document.createElement('canvas');
-        canvas.id = 'videoCanvas';
-        canvas.style.maxWidth = '100%';
-        canvas.style.height = 'auto';
-        canvas.style.background = '#000';
-        canvas.style.display = 'none'; // oculto hasta recibir frames
-        container.appendChild(canvas);
-    }
-    const ctx = canvas.getContext('2d');
-
-    // Placeholder video URL (si tienes <video id="video" data-placeholder-video="...">)
-    const placeholderVideo = (videoEl && (videoEl.dataset.placeholderVideo || videoEl.getAttribute('data-placeholder-video'))) || './fotos/placeholder-video.mp4';
-
-    // Inicializar estado de conexión (tu archivo connection-status.js)
-    if (typeof ConnectionStatus !== 'undefined') {
-        ConnectionStatus.init(socket);
-    }
-
-    // Ajusta tamaño del canvas
-    function resizeCanvas(w, h) {
-        canvas.width = w;
-        canvas.height = h;
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-    }
-
-    function showOverlay() {
-        const overlay = document.getElementById('videoOverlay');
-        if (!overlay) return;
-        overlay.classList.add('active');
-    }
-
-    function hideOverlay() {
-        const overlay = document.getElementById('videoOverlay');
-        if (!overlay) return;
-        overlay.classList.remove('active');
-    }
-
-    // Mostrar placeholder (usa el elemento video si existe)
-    function showPlaceholder() {
-        // ocultar canvas y mostrar vídeo placeholder si existe
-        canvas.style.display = 'none';
-        if (videoEl) {
-            try {
-                videoEl.style.display = '';
-                videoEl.loop = true;
-                if (!videoEl.src || videoEl.src.indexOf(placeholderVideo) === -1) {
-                    videoEl.src = placeholderVideo;
-                    videoEl.load();
-                }
-                videoEl.play().catch(()=>{});
-            } catch(e){}
-        }
-        showOverlay();
-        if (typeof ConnectionStatus !== 'undefined') ConnectionStatus.setStatus(false);
-    }
-
-    // Evita controles si existe videoEl y quieres bloquear interacción
-    if (videoEl) {
-        videoEl.removeAttribute('controls');
-        videoEl.setAttribute('tabindex','-1');
-        ['contextmenu','click','dblclick'].forEach(ev => videoEl.addEventListener(ev, e => e.preventDefault()));
-        videoEl.addEventListener('keydown', e => {
-            const blocked = [' ', 'Spacebar', 'k','K','MediaPlayPause','ArrowLeft','ArrowRight','f'];
-            if (blocked.includes(e.key)) e.preventDefault();
-        }, true);
-    }
-
-    // Reproducir placeholder al inicio
-    showPlaceholder();
-
-
-    const WATCHDOG_TIMEOUT = 60000; // ms — ajusta según frecuencia de frames
-    let _streamWatchdog = null;
-
-    function resetStreamWatchdog() {
-        if (_streamWatchdog) clearTimeout(_streamWatchdog);
-        _streamWatchdog = setTimeout(() => {
-            console.warn('Watchdog: no se han recibido frames — mostrando placeholder');
-            showPlaceholder();
-        }, WATCHDOG_TIMEOUT);
-    }
-
-
-    // Manejo de frames entrantes
-    socket.on('frame', data => {
-        resetStreamWatchdog();
-        if (!data || !data.frame) return;
-        hideOverlay();
-        try {
-            const frame = data.frame;
-
-            // 1) Si el frame viene como data:image/... -> dibujar en canvas
-            if (typeof frame === 'string' && frame.startsWith('data:image')) {
-                // ocultar video y mostrar canvas
-                if (videoEl) try { videoEl.pause(); videoEl.style.display = 'none'; } catch(e){}
-                canvas.style.display = '';
-                const img = new Image();
-                img.onload = () => {
-                    resizeCanvas(img.naturalWidth || img.width || 640, img.naturalHeight || img.height || 360);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                };
-                img.onerror = () => { showPlaceholder(); };
-                img.src = frame;
-            }
-            // 2) Si el frame es un Blob
-            else if (frame instanceof Blob) {
-                const mime = frame.type || '';
-                const url = URL.createObjectURL(frame);
-                if (mime.startsWith('image/')) {
-                    if (videoEl) try { videoEl.pause(); videoEl.style.display = 'none'; } catch(e){}
-                    canvas.style.display = '';
-                    const img = new Image();
-                    img.onload = () => {
-                        resizeCanvas(img.naturalWidth || img.width || 640, img.naturalHeight || img.height || 360);
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        URL.revokeObjectURL(url);
-                    };
-                    img.onerror = () => { URL.revokeObjectURL(url); showPlaceholder(); };
-                    img.src = url;
-                } else {
-                    // tratar blob como vídeo (stream)
-                    canvas.style.display = 'none';
-                    if (videoEl) {
-                        videoEl.style.display = '';
-                        videoEl.loop = false;
-                        if (videoEl.src !== url) { videoEl.src = url; videoEl.load(); }
-                        videoEl.play().catch(()=>{});
-                    }
-                }
-            }
-            // 3) Si el backend envía una URL/stream de vídeo (data:video, http, .mp4, .webm)
-            else if (typeof frame === 'string' && (frame.startsWith('data:video') || frame.startsWith('blob:') || frame.startsWith('http') || frame.endsWith('.mp4') || frame.endsWith('.webm'))) {
-                canvas.style.display = 'none';
-                if (videoEl) {
-                    videoEl.style.display = '';
-                    videoEl.loop = false;
-                    if (videoEl.src !== frame) { videoEl.src = frame; videoEl.load(); }
-                    videoEl.play().catch(()=>{});
-                }
-            } else {
-                // fallback
-                showPlaceholder();
-            }
-        } catch (err) {
-            console.error('Error aplicando frame:', err);
-            showPlaceholder();
-        }
-
-        // Actualizar métricas si vienen
-        if (data.metric_car_count !== undefined && data.metric_car_count !== null) {
-            const el = document.getElementById('car-count-value');
-            if (el) el.textContent = data.metric_car_count;
-        }
-        if (typeof ConnectionStatus !== 'undefined') ConnectionStatus.onFrame();
-    });
-
-    // si error en el elemento video, volver al placeholder
-    socket.on('disconnect', () => {
-        console.warn('Socket desconectado — mostrando placeholder');
-        showPlaceholder();
-        if (_streamWatchdog) clearTimeout(_streamWatchdog);
-    });
-    socket.on('connect', () => resetStreamWatchdog());
-
-        if (videoEl) {
-        ['stalled','suspend','emptied','ended'].forEach(evt => {
-            videoEl.addEventListener(evt, () => {
-                setTimeout(() => {
-                    if (videoEl.paused || videoEl.readyState < 2) showPlaceholder();
-                }, 700);
-            });
-        });
-    }
-    </script> -->
-
 
     <script>
     const socket = io();
@@ -681,24 +519,7 @@
 
     // Inicializar placeholder al inicio
     showPlaceholder();
-    
-    socket.on("connect", () => {
-    // Cambiar texto
-    document.getElementById("status-text").textContent = "Conectado";
 
-    // Cambiar estado visual del punto
-    const dot = document.getElementById("status-dot");
-    dot.classList.remove("disconnected");
-    dot.classList.add("connected");
-    });
-
-    socket.on("disconnect", () => {
-        document.getElementById("status-text").textContent = "Desconectado";
-
-        const dot = document.getElementById("status-dot");
-        dot.classList.remove("connected");
-        dot.classList.add("disconnected");
-    });
     </script>
 
     <!--Script para el botón de "volver arriba"-->
@@ -792,7 +613,7 @@
             id_video: v.id_video,
             fecha: fmtDateShort(v.fecha_hora),
             titulo: `<a href="video_grande.html?id=${encodeURIComponent(v.id_video)}">Grabación ${v.id_video}</a>`,
-            metrica: v.metrica ?? 0,
+            metrica_coches: v.metrica_coches ?? 0,
             metrica_personas: v.metrica_personas ?? 0,
             metrica_bici: v.metrica_bici ?? 0, 
             duracion: formatDuration(v.duracion),
@@ -961,6 +782,144 @@
         setInterval(pushSample, INTERVAL_MS);
     })();
     </script>
+
+    <!-- Script para representar el mapa GPS -->  
+   <!-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const carousel = document.getElementById("heroCarousel");
+
+        carousel.addEventListener("slid.bs.carousel", function (event) {
+            const active = event.to; // índice del slide activo
+
+            if (active === 1) {  // El slide 1 es el segundo → el mapa
+                if (!window._mapInitialized) {
+                    window._mapInitialized = true;
+
+                    window.map = L.map("map").setView([43.524398, -5.629113], 16);
+
+                    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                        maxZoom: 19,
+                        attribution: "&copy; OpenStreetMap"
+                    }).addTo(window.map);
+
+                    const marker = L.marker([43.524398, -5.629113]).addTo(window.map);
+                    marker.bindPopup("Campus de Gijón").openPopup();
+
+                }
+
+                setTimeout(() => {
+                    window.map.invalidateSize();
+                }, 200);
+            }
+        });
+
+    });
+    </script> -->
+
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const carousel = document.getElementById("heroCarousel");
+    let marker = null; 
+    let gpsInterval = null; 
+    let timeoutCheck = null;
+    let lastReceived = null;
+
+    const url = window.serverSettings.url;
+    const API_GPS = url + ':3000/gps';
+    const initialView = [43.524398, -5.629113];
+    const initialZoom = 16;
+
+    var greenIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // Función para pedir coordenadas GPS
+    function actualizarGPS() {
+        fetch(API_GPS)
+            .then(r => r.json())
+            .then(data => {
+                console.log("Datos GPS recibidos:", data);
+                if (!data.latitud || !data.longitud) return;
+
+                lastReceived = Date.now(); // actualizar timestamp
+
+                if (!marker) {
+                    marker = L.marker([data.latitud, data.longitud], {icon: greenIcon}).addTo(window.map);
+                } else {
+                    marker.setLatLng([data.latitud, data.longitud]);
+                }
+
+                window.map.panTo([data.latitud, data.longitud]);
+            })
+            .catch(err => console.error("Error obteniendo GPS:", err));
+    }
+
+    function checkTimeout() {
+        if (!lastReceived) return;
+        const now = Date.now();
+        const timeout = 10000; // 10 segundos sin coordenadas
+        if (now - lastReceived > timeout) {
+            if (marker) {
+                window.map.removeLayer(marker);
+                marker = null;
+            }
+            window.map.setView(initialView, initialZoom);
+            lastReceived = null;
+        }
+    }
+
+    carousel.addEventListener("slid.bs.carousel", function (event) {
+        const active = event.to; 
+
+        if (active === 1) {  
+            if (!window._mapInitialized) {
+                window._mapInitialized = true;
+
+                window.map = L.map("map").setView(initialView, initialZoom);
+
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    maxZoom: 19,
+                    attribution: "&copy; OpenStreetMap"
+                }).addTo(window.map);
+            }
+
+            setTimeout(() => window.map.invalidateSize(), 200);
+
+            if (!gpsInterval) {
+                gpsInterval = setInterval(actualizarGPS, 3000);
+                actualizarGPS(); 
+            }
+
+            if (!timeoutCheck) {
+                timeoutCheck = setInterval(checkTimeout, 2000);
+            }
+
+        } else {
+            if (gpsInterval) {
+                clearInterval(gpsInterval);
+                gpsInterval = null;
+            }
+            if (timeoutCheck) {
+                clearInterval(timeoutCheck);
+                timeoutCheck = null;
+            }
+        }
+    });
+
+});
+</script>
+
+
+
+  
 </body>
 </html>
 

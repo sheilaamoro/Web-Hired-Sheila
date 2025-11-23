@@ -107,12 +107,12 @@
 
 @media (max-width: 991px) {
     .navbar {
-        transform: none;               /* evita crear nuevo contexto de apilamiento */
-        left: 20px;                    /* margen izquierdo fijo */
-        right: 20px;                   /* margen derecho fijo */
-        width: calc(100% - 40px);      /* mantener 20px de margen a cada lado */
-        border-radius: 50px;           /* opcional: radius más pequeño en móvil */
-        z-index: 1030;                 /* dejar por debajo del offcanvas (bootstrap usa ~1045) */
+        transform: none;               
+        left: 20px;                    
+        right: 20px;                   
+        width: calc(100% - 40px);      
+        border-radius: 50px;           
+        z-index: 1030;                 
     }
 }
 
