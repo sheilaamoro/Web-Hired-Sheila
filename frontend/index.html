@@ -73,14 +73,14 @@
             <span class="hero-line">Haz que tu visión sea el doble de inteligente</span>
         </h1>
         <p class="hero-subtitle">Observa y analiza el flujo de personas, coches y bicicletas en tiempo real.</p>
-        <a href="#video" class="btn hero-cta">Ver en directo <i class="fa-solid fa-chevron-right"></i></a>
+        <a href="#video-container" class="btn hero-cta">Ver en directo <i class="fa-solid fa-chevron-right"></i></a>
         
     </div>
 
 
     <div class="container2 nuevo-hero">
         <div class="hero-grid">
-            <div class="hero-left video-card">
+            <div class="hero-left video-card" id="video-container">
                 <video id="video" data-placeholder-video="./fotos/placeholder-video.mp4" playsinline muted autoplay loop disablepictureinpicture controlslist="nodownload" style="max-width:100%; height:auto; background:#000;" aria-label="Transmisión en directo">
                     <source id="placeholderSource" src="./fotos/placeholder-video.mp4" type="video/mp4">
                     Tu navegador no soporta el elemento <code>video</code>.
@@ -371,6 +371,7 @@
 
     // Elementos
     const videoEl = document.getElementById('video');
+    if (videoEl) videoEl.tabIndex = -1; 
     const container = document.querySelector('.hero-left.video-card') || (videoEl && videoEl.parentElement) || document.body;
 
     // Canvas para frames tipo imagen
@@ -783,138 +784,105 @@
     })();
     </script>
 
-    <!-- Script para representar el mapa GPS -->  
-   <!-- <script>
+   
+
+    <script>
     document.addEventListener("DOMContentLoaded", function () {
 
         const carousel = document.getElementById("heroCarousel");
+        let marker = null; 
+        let gpsInterval = null; 
+        let timeoutCheck = null;
+        let lastReceived = null;
+
+        const url = window.serverSettings.url;
+        const API_GPS = url + ':3000/gps';
+        const initialView = [43.524398, -5.629113];
+        const initialZoom = 16;
+
+        var greenIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        // Función para pedir coordenadas GPS
+        function actualizarGPS() {
+            fetch(API_GPS)
+                .then(r => r.json())
+                .then(data => {
+                    console.log("Datos GPS recibidos:", data);
+                    if (!data.latitud || !data.longitud) return;
+
+                    lastReceived = Date.now(); // actualizar timestamp
+
+                    if (!marker) {
+                        marker = L.marker([data.latitud, data.longitud], {icon: greenIcon}).addTo(window.map);
+                    } else {
+                        marker.setLatLng([data.latitud, data.longitud]);
+                    }
+
+                    window.map.panTo([data.latitud, data.longitud]);
+                })
+                .catch(err => console.error("Error obteniendo GPS:", err));
+        }
+
+        function checkTimeout() {
+            if (!lastReceived) return;
+            const now = Date.now();
+            const timeout = 10000; // 10 segundos sin coordenadas
+            if (now - lastReceived > timeout) {
+                if (marker) {
+                    window.map.removeLayer(marker);
+                    marker = null;
+                }
+                window.map.setView(initialView, initialZoom);
+                lastReceived = null;
+            }
+        }
 
         carousel.addEventListener("slid.bs.carousel", function (event) {
-            const active = event.to; // índice del slide activo
+            const active = event.to; 
 
-            if (active === 1) {  // El slide 1 es el segundo → el mapa
+            if (active === 1) {  
                 if (!window._mapInitialized) {
                     window._mapInitialized = true;
 
-                    window.map = L.map("map").setView([43.524398, -5.629113], 16);
+                    window.map = L.map("map").setView(initialView, initialZoom);
 
                     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                         maxZoom: 19,
                         attribution: "&copy; OpenStreetMap"
                     }).addTo(window.map);
-
-                    const marker = L.marker([43.524398, -5.629113]).addTo(window.map);
-                    marker.bindPopup("Campus de Gijón").openPopup();
-
                 }
 
-                setTimeout(() => {
-                    window.map.invalidateSize();
-                }, 200);
+                setTimeout(() => window.map.invalidateSize(), 200);
+
+                if (!gpsInterval) {
+                    gpsInterval = setInterval(actualizarGPS, 3000);
+                    actualizarGPS(); 
+                }
+
+                if (!timeoutCheck) {
+                    timeoutCheck = setInterval(checkTimeout, 2000);
+                }
+
+            } else {
+                if (gpsInterval) {
+                    clearInterval(gpsInterval);
+                    gpsInterval = null;
+                }
+                if (timeoutCheck) {
+                    clearInterval(timeoutCheck);
+                    timeoutCheck = null;
+                }
             }
         });
 
     });
-    </script> -->
-
-
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const carousel = document.getElementById("heroCarousel");
-    let marker = null; 
-    let gpsInterval = null; 
-    let timeoutCheck = null;
-    let lastReceived = null;
-
-    const url = window.serverSettings.url;
-    const API_GPS = url + ':3000/gps';
-    const initialView = [43.524398, -5.629113];
-    const initialZoom = 16;
-
-    var greenIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
-
-    // Función para pedir coordenadas GPS
-    function actualizarGPS() {
-        fetch(API_GPS)
-            .then(r => r.json())
-            .then(data => {
-                console.log("Datos GPS recibidos:", data);
-                if (!data.latitud || !data.longitud) return;
-
-                lastReceived = Date.now(); // actualizar timestamp
-
-                if (!marker) {
-                    marker = L.marker([data.latitud, data.longitud], {icon: greenIcon}).addTo(window.map);
-                } else {
-                    marker.setLatLng([data.latitud, data.longitud]);
-                }
-
-                window.map.panTo([data.latitud, data.longitud]);
-            })
-            .catch(err => console.error("Error obteniendo GPS:", err));
-    }
-
-    function checkTimeout() {
-        if (!lastReceived) return;
-        const now = Date.now();
-        const timeout = 10000; // 10 segundos sin coordenadas
-        if (now - lastReceived > timeout) {
-            if (marker) {
-                window.map.removeLayer(marker);
-                marker = null;
-            }
-            window.map.setView(initialView, initialZoom);
-            lastReceived = null;
-        }
-    }
-
-    carousel.addEventListener("slid.bs.carousel", function (event) {
-        const active = event.to; 
-
-        if (active === 1) {  
-            if (!window._mapInitialized) {
-                window._mapInitialized = true;
-
-                window.map = L.map("map").setView(initialView, initialZoom);
-
-                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                    maxZoom: 19,
-                    attribution: "&copy; OpenStreetMap"
-                }).addTo(window.map);
-            }
-
-            setTimeout(() => window.map.invalidateSize(), 200);
-
-            if (!gpsInterval) {
-                gpsInterval = setInterval(actualizarGPS, 3000);
-                actualizarGPS(); 
-            }
-
-            if (!timeoutCheck) {
-                timeoutCheck = setInterval(checkTimeout, 2000);
-            }
-
-        } else {
-            if (gpsInterval) {
-                clearInterval(gpsInterval);
-                gpsInterval = null;
-            }
-            if (timeoutCheck) {
-                clearInterval(timeoutCheck);
-                timeoutCheck = null;
-            }
-        }
-    });
-
-});
 </script>
 
 

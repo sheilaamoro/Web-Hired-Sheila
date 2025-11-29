@@ -101,6 +101,8 @@ html {
   font-weight: 600;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   border: 0.5px solid #009970;
+  position: relative;
+  z-index: 500;
 }
 
 .hero .hero-cta:hover {
@@ -183,7 +185,9 @@ html {
   background:#000;
   display:block;
   scroll-margin-top: 200px;
+   pointer-events: none;
 }
+
 
 .video-placeholder {
   display: flex;
@@ -219,7 +223,9 @@ html {
   opacity: 0;
   transition: opacity .18s ease, transform .18s ease;
   transform: translateY(6px);
+  pointer-events: none;
 }
+
 
 .video-overlay.active {
   opacity: 1;
