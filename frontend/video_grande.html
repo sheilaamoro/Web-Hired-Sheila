@@ -62,83 +62,44 @@
     </nav>
     <!--End Nabvar-->
 
-    <div class="container2">
-        <div id="content1" style="display: block;">
-            <section class="hero-section">
-                <video id="videoFile" controls style="width: 95%; height: auto; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);border-radius:10px;">
-                    <source src="" type="video/mp4">
-                    Tu navegador no soporta el elemento de video.
-                </video>
-                
-            </section>
-        </div>
-
-        <div id="content2" style="display: none;">
-            <section class="hero-section">
-                <div class="dash-video-player">
-                    <div class="videoContainer" id="videoContainer">
-                        <video id="VideoPlayer" controls></video>
-                        <div id="videoController" class="video-controller unselectable">
-                            <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
-                                <span id="iconPlayPause" class="icon-play"></span>
-                            </div>
-                            <span id="videoTime" class="time-display">00:00:00</span>
-                            <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
-                                <span class="icon-fullscreen-enter"></span>
-                            </div>
-                            <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
-                                <span class="icon-bitrate"></span>
-                            </div>
-                            <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01">
-                            <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
-                                <span id="iconMute" class="icon-mute-off"></span>
-                            </div>
-                            <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
-                                <span class="icon-tracks"></span>
-                            </div>
-                            <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
-                                <span class="icon-caption"></span>
-                            </div>
-                            <span id="videoDuration" class="duration-display">00:00:00</span>
-                            <div class="seekContainer">
-                                <div id="seekbar" class="seekbar seekbar-complete">
-                                    <div id="seekbar-buffer" class="seekbar seekbar-buffer"></div>
-                                    <div id="seekbar-play" class="seekbar seekbar-play"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+ <div class="container2">
+            <div id="content1" style="display: block;">
+                <section class="hero-section">
+                    <video id="videoFile">
+                        <source src="" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </section>
+            </div>
 
     </div>
 
+
     <div class="container3">
          
-    <div id="alwaysVisibleContent" class="row flex-column flex-md-row justify-content-center align-items-center">
-        <div class="col-md-9 d-flex justify-content-center gap-3 mb-3 mb-md-0">
-           <div class="card border-success rounded-3 text-center p-1 flex-fill shadow-sm"  style="background: linear-gradient(to bottom, #d4edda 40%, #ffffff 40%);">
-                <i class="fa-solid fa-car fa-lg text-success mb-2" style="padding:4px;"></i>
-                <div id="videoMetrica" class="fw-bold fs-6 text-dark">0</div>
-                <div class="text-muted small">Coches</div>
-            </div>
-
+        <div id="alwaysVisibleContent" class="row flex-column flex-md-row justify-content-center align-items-center">
+            <div class="col-md-9 d-flex justify-content-center gap-3 mb-3 mb-md-0">
             <div class="card border-success rounded-3 text-center p-1 flex-fill shadow-sm"  style="background: linear-gradient(to bottom, #d4edda 40%, #ffffff 40%);">
-                <i class="fa-solid fa-person fa-lg text-success mb-2" style="padding:4px;"></i>
-                <div id ="videoMetricaPersona" class="fw-bold fs-6 text-dark">0</div>
-                <div class="text-muted small">Personas</div>
+                    <i class="fa-solid fa-car fa-lg text-success mb-2" style="padding:4px;"></i>
+                    <div id="videoMetrica" class="fw-bold fs-6 text-dark">0</div>
+                    <div class="text-muted small">Coches</div>
+                </div>
+
+                <div class="card border-success rounded-3 text-center p-1 flex-fill shadow-sm"  style="background: linear-gradient(to bottom, #d4edda 40%, #ffffff 40%);">
+                    <i class="fa-solid fa-person fa-lg text-success mb-2" style="padding:4px;"></i>
+                    <div id ="videoMetricaPersona" class="fw-bold fs-6 text-dark">0</div>
+                    <div class="text-muted small">Personas</div>
+                </div>
+
+                <div class="card border-success rounded-3 text-center p-1 flex-fill shadow-sm"  style="background: linear-gradient(to bottom, #d4edda 40%, #ffffff 40%);">
+                    <i class="fa-solid fa-bicycle fa-lg text-success mb-2" style="padding:4px;"></i>
+                    <div id = "videoMetricaBici" class="fw-bold fs-6 text-dark">0</div>
+                    <div class="text-muted small">Bicicletas</div>
+                </div>
+
             </div>
 
-            <div class="card border-success rounded-3 text-center p-1 flex-fill shadow-sm"  style="background: linear-gradient(to bottom, #d4edda 40%, #ffffff 40%);">
-                <i class="fa-solid fa-bicycle fa-lg text-success mb-2" style="padding:4px;"></i>
-                <div class="fw-bold fs-6 text-dark">0</div>
-                <div class="text-muted small">Bicicletas</div>
-            </div>
-
-        </div>
-
-        <!-- Información del video -->
+         <!-- Información del video -->
         <div class="col-md-3 d-flex flex-column align-items-start order-md-2 order-1">
             <div class="row">
                 <div class="col-12 d-flex flex-column align-items-start">
@@ -150,29 +111,32 @@
         </div>
 
     </div>
-</div>
+    </div> 
 
-<div class="container_videos text-center" id="videos">
-  <h3 class="section-subtitle">TODO LO QUE NECESITAS, <span class="hero-line-tech">TODO EN UN SOLO LUGAR</span></h3>
-  <p>Revive las emisiones accediendo a <em>todas</em> las grabaciones y explora sus métricas asociadas.</p>
-  <div class="table-responsive">
-    <table id="fresh-table" class="table">
-      <thead>
-        <tr>
-          <th data-field="fecha" data-sortable="true">Fecha / Hora</th>
-          <th data-field="titulo" data-sortable="true">Título</th>
-          <th data-field="metrica_coches" data-sortable="true" data-align="center">Coches detectados</th>
-          <th data-field="metrica_personas" data-sortable="true" data-align="center">Personas detectadas</th>
-          <th data-field="metrica_bici" data-sortable="true" data-align="center">Bicicletas detectadas</th>
-          <th data-field="duracion" data-sortable="true" data-align="center">Duración</th>
-        </tr>
-      </thead>
-      <tbody id="videos-table-body">
-        <!-- Rellenado dinámico -->
-      </tbody>
-    </table>
-  </div>
-</div>
+
+    
+
+    <div class="container_videos text-center" id="videos">
+    <h3 class="section-subtitle">TODO LO QUE NECESITAS, <span class="hero-line-tech">TODO EN UN SOLO LUGAR</span></h3>
+    <p>Revive las emisiones accediendo a <em>todas</em> las grabaciones y explora sus métricas asociadas.</p>
+    <div class="table-responsive">
+        <table id="fresh-table" class="table">
+        <thead>
+            <tr>
+            <th data-field="fecha" data-sortable="true">Fecha / Hora</th>
+            <th data-field="titulo" data-sortable="true">Título</th>
+            <th data-field="metrica_coches" data-sortable="true" data-align="center">Coches detectados</th>
+            <th data-field="metrica_personas" data-sortable="true" data-align="center">Personas detectadas</th>
+            <th data-field="metrica_bici" data-sortable="true" data-align="center">Bicicletas detectadas</th>
+            <th data-field="duracion" data-sortable="true" data-align="center">Duración</th>
+            </tr>
+        </thead>
+        <tbody id="videos-table-body">
+            <!-- Rellenado dinámico -->
+        </tbody>
+        </table>
+    </div>
+    </div>
 
     <!--Footer de la página web-->
     <div class="cuerpo-footer">
@@ -281,7 +245,6 @@
         })();
     </script>
 
-    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const url = window.serverSettings.url;
@@ -299,11 +262,13 @@
             fetch(url + ':3000/video/' + videoId)
                 .then(res => res.json())
                 .then(json => {
-                    //console.log(json);
-                    //console.log("Entrando en .then, duración:", json.duracion);
                     videoTitle.innerHTML = 'Grabación ' + json.id_video;
-                    document.querySelector('#videoFile source').src = window.serverSettings.url + ':3000/videos/' + json.nombre;
-                    document.querySelector('#videoFile').load();
+                    const sourceEl = document.querySelector('#videoFile source');
+                    sourceEl.src = window.serverSettings.url + ':3000/videos/' + json.nombre;
+
+                    videoFile.load(); 
+                    videoFile.muted = true; 
+                    videoFile.play().catch(err => console.warn('Autoplay bloqueado:', err));
 
                     const durationseconds = json.duracion ?? 0;
                     let duracionFormatted;
@@ -316,8 +281,9 @@
                     }
                     videoDuration2.innerHTML = 'Duración: ' + duracionFormatted;
 
+                    // Fecha
                     const createdAt = new Date(json.fecha_hora);
-                    const fechaFormateada = createdAt.toLocaleDateString('es-ES', {
+                    videoCreatedAt.innerHTML = createdAt.toLocaleDateString('es-ES', {
                         day: '2-digit',
                         month: 'long',
                         year: 'numeric',
@@ -325,8 +291,8 @@
                         minute: '2-digit',
                         second: '2-digit'
                     });
-                    
-                    videoCreatedAt.innerHTML = fechaFormateada;
+
+                    // Métricas
                     videoMetrica.innerHTML = (json.metrica_coches ?? 0);
                     videoMetricaPersona.innerHTML = (json.metrica_personas ?? 0);
                     videoMetricaBici.innerHTML = (json.metrica_bici ?? 0);

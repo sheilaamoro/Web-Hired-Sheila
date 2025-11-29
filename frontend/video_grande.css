@@ -22,7 +22,6 @@ html, body {
     position: relative;
     height: 50%;
   
-  
 }
 
 /* Contenedor de la información del vídeo */
@@ -47,10 +46,23 @@ html, body {
         border-right: none;
         border-bottom: 1px solid gray;
         padding-right: 0;
-        padding-bottom: 1rem; /* separa la línea horizontal de las métricas */
+        padding-bottom: 1rem; 
     }
 }
 
+
+#videoFile {
+    width: 60%;
+    height: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    #videoFile {
+        width: 100%;   
+    }
+}
 /* Fin del contenedor de información del vídeo */
 .button-container {
    
@@ -79,23 +91,6 @@ html, body {
 }
 
 
-/* .dash-video-player {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.dash-video-player video {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-} */
-
-#VideoPlayer {
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-}
 
 /*Botones de selección*/
 .btn {
@@ -111,9 +106,6 @@ html, body {
     border: black;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
-
-
-
 
 
 /* Inicio Vídeos guardados */
