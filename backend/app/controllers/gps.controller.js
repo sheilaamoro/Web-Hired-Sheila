@@ -9,7 +9,7 @@ function saveGPS(req, res) {
     }
 
     lastGPS = { latitud, longitud, timestamp: Date.now() };
-    console.log("GPS recibido:", lastGPS);
+    //console.log("GPS recibido:", lastGPS);
 
     res.json({ status: "OK" });
 }

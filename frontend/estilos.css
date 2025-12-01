@@ -35,53 +35,6 @@
 }
 
 
-/* Inicio de la parte de Conectado y desconectado */
-/* Animación tipo "grabando" para el punto */
-@keyframes recording-pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(0,179,131,0.5);
-        opacity: 1;
-    }
-    60% {
-        transform: scale(1.18);
-        box-shadow: 0 0 0 12px rgba(0,179,131,0);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(0,179,131,0);
-        opacity: 1;
-    }
-}
-
-.status-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #dc3545; /* rojo por defecto */
-    vertical-align: middle;
-    transition: background 0.25s ease, transform 0.2s ease;
-}
-
-/* color por estado */
-.status-dot.connected { background: #00b383; }
-.status-dot.disconnected { background: #dc3545; }
-
-/* añadir pulso solo cuando esté "recording" y conectado */
-.status-dot.connected.recording {
-    animation: recording-pulse 1.4s ease-out infinite;
-}
-
-/* opcional: pequeño desplazamiento del texto al pulsar */
-.status-text {
-    color: #000;
-    font-size: 14px;
-    line-height: 1;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
- /* Fin de la parte de Conectado y desconectado */
 
 .navbar-toggler {
     border: none;
