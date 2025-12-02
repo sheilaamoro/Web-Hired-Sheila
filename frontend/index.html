@@ -647,7 +647,7 @@
     }
  
      function loadFromApi() {
-        console.log('Cargando vídeos desde', API_VIDEOS);
+       // console.log('Cargando vídeos desde', API_VIDEOS);
         fetch(API_VIDEOS, { cache: 'no-store' })
             .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
             .then(data => {
@@ -774,7 +774,7 @@
     </script>
 
    
-
+    <!-- Parte de script para la representación del mapa a partir de Leaflet-->
     <script>
     document.addEventListener("DOMContentLoaded", function () {
 
@@ -803,7 +803,7 @@
             fetch(API_GPS)
                 .then(r => r.json())
                 .then(data => {
-                    console.log("Datos GPS recibidos:", data);
+                    //console.log("Datos GPS recibidos:", data);
                     if (!data.latitud || !data.longitud) return;
 
                     lastReceived = Date.now(); // actualizar timestamp
